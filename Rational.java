@@ -1,8 +1,8 @@
 /*
-  Team Real Pengueen - Janet Zhang, Dorothy Ng
+  Janet Zhang
   APCS1 pd5
-  HW32 -- Irrationality Stops Here
-  2015-11-17
+  HW33 -- Do You Even Add, Bro?
+  2015-11-18
 */
 
 //PHASE 1
@@ -47,23 +47,6 @@ public class Rational{
     }
 
     //PHASE 2
-    /*
-      add
-      Takes 1 Rational object (just like multiply) and adds it to the current rational number object
-      Need not reduce
-
-      subtract
-      Works the same as add, except the operation is subtraction
-
-      gcd
-      Returns the gcd of the numerator and denominator
-
-      Uses Euclid's algorithm (reuse your old code!)
-      Recall that in order for Euclid's algorithm to work, the first number must be greater than the second
-
-      reduce
-      Changes this Rational to one in reduced form (should use gcd)
-    */
     public static int max(int a, int b){
 	if (a>b){
 	    return a;}
@@ -80,7 +63,6 @@ public class Rational{
         //System.out.println("newD: "+d*otherD);
 	int otherT=d*otherN; //System.out.println("newN2: "+otherT);
 	n=n*otherD+otherT; d=d*otherD;
-	System.out.println(n+"/"+d);
     }
     public void subtract(Rational other){
 	int otherS=other.toString().indexOf("/");
@@ -93,44 +75,71 @@ public class Rational{
         //System.out.println("newD: "+d*otherD);
 	int otherT=d*otherN; //System.out.println("newN2: "+otherT);
 	n=n*otherD-otherT; d=d*otherD;
-	System.out.println(n+"/"+d);
     }
+    public int gcd(){
+	if(n == d || n == 0 || d == 0) {
+	    return max(n,d);}//the output when a and b are equal
+	return gcd(n%d, d%n);//else, keep modulating until a==b(in above) and return it
+    }
+    public void reduce(){
+        int i=gcd();n=n/i;d=d/i;
+    }
+    //PHASE 3
+    
+    public static double maxN(double a, double b){
+	if (a>b){
+	    return a;}
+	else{
+	    return b;}}//return double
     public static int gcd(int a, int b){
 	if(a == b || a == 0 || b == 0) {
 	    return max(a,b);}//the output when a and b are equal
 	return gcd(a%b, b%a);//else, keep modulating until a==b(in above) and return it
     }
-    public  void reduce(){
-        int i=gcd(n,d);n=n/i;d=d/i;
+    public int compareTo(Rational other){
+        other.reduce();
+	int otherS=other.toString().indexOf("/");
+	int otherL=other.toString().length();
+	int otherN=Integer.parseInt(other.toString().substring(0,otherS));
+	int otherD=Integer.parseInt(other.toString().substring(otherS+1,otherL));
+	double numO=floatValue(otherN,otherD);
+        double numN=floatValue(n,d);
+	if (numO==(numN)) return 0;
+	else if (numO==maxN(numO,numN)) return 1;
+	else return -1;
     }
     public static void main(String[] args) {
 	Rational goose = new Rational(2,0); //Stores the rational number 0/1 bc invalid params
-	System.out.println("goose: "+goose);
 	Rational t = new Rational(4,18); //Stores the rational number 4/18
 	Rational r = new Rational(2,3); //Stores the rational number 2/3
 	Rational s = new Rational(1,2); //Stores the rational number 1/2
+	System.out.println("r: "+r);
+	System.out.println("s: "+s);
+	System.out.println("t: "+t);
 	//Part1
-	/*
-	  r.multiply(s); //Multiplies r by s, changes r to 2/6.  s remains ½
-	  System.out.println("r: "+r);
-	  System.out.println("s: "+s);
-	  r.divide(s); //Multiplies r by s, changes r to 2/6.  s remains ½
-	  System.out.println("r: "+r);
-	  System.out.println("s: "+s);
-	*/
+	System.out.println("\nMultiplying r by s...");
+	    r.multiply(s); //Multiplies r by s, changes r to 2/6.  s remains ½
+	System.out.println("r now equals: "+ r);
+	System.out.println("s now equals: "+ s);
+	System.out.println("\nDividing r by s...");
+	    r.divide(s); //Multiplies r by s, changes r to 2/6.  s remains ½
 	//Part2
-	/*
-	  System.out.println("r: "+r);
-	  System.out.println("s: "+s);
-	  System.out.println("t: "+t);
-	  r.add(s);  //Adds r to s, changes r to 7/6.  s remains 1/2
-	  //r.subtract(s);
-	  System.out.println("r: "+r);
-	  System.out.println("s: "+s);
-	  System.out.println("t: "+t);
-	  System.out.println("gcd: "+gcd(5,6));
-	  t.reduce(); //Changes t to 2/9
-	  System.out.println("t: "+t);
-	*/
+	System.out.println("r now equals: "+ r);
+	System.out.println("s now equals: "+ s);
+	System.out.println("\nAdding s to r...");
+	    r.add(s);  //Adds r to s, changes r to 7/6.  s remains 1/2
+	System.out.println("r now equals: "+ r);
+	System.out.println("s now equals: "+ s);
+	System.out.println("\nSubtracting s from r...");
+	    r.subtract(s);
+	System.out.println("r now equals: "+ r);
+	System.out.println("s now equals: "+ s);
+	t.reduce(); //Changes t to 2/9
+	System.out.println("t now equals: "+ t);
+	
+	//Part3
+	System.out.println("\nComparing t to s...");
+	System.out.println("if t is greater than s: return 1 \nif t is less than s: return -1 \nif t is equal to s: return 0");
+	System.out.println(t.compareTo(s));
     }
 }
